@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\StatusCheck;
+use App\Models\Incident;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MonitoredSite extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -25,5 +28,9 @@ class MonitoredSite extends Model
 
     public function statusChecks() {
         return $this->hasMany(StatusCheck::class);
+    }
+
+    public function Incidents() {
+        return $this->hasMany(Incident::class);
     }
 }
