@@ -44,9 +44,9 @@ class MonitoredSiteController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(MonitoredSite $site)
     {
-        //
+        return view('admin.sites.create', compact('site'));
     }
 
     /**
@@ -60,8 +60,8 @@ class MonitoredSiteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(MonitoredSite $site)
     {
-        //
+        
     }
 }
