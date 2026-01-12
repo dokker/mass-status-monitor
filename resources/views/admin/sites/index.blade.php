@@ -19,7 +19,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     @forelse ($sites as $site)
         {{-- Site Card component --}}
-        <div class="card bg-base-100 shadow-md">
+        <div class="card bg-base-100 shadow-md hover:shadow-xl transition-shadow duration-300">
             {{-- Card header --}}
             <div class="card-body">
                 <div class="flex justify-between items-start mb-2">
@@ -105,6 +105,9 @@
         </div>
     @empty
         {{-- No Site Message --}}
+        <div class="card bg-base-100 shadow-md">
+            <h2 class="text-2xl font-bold mb-1">No Sites Yet</h2>
+        </div>
     @endforelse
 </div>
 
