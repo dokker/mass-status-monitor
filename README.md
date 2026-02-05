@@ -1,59 +1,283 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Website Monitor - Laravel 12 Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A real-time website monitoring application built with Laravel 12 that tracks the uptime/downtime of WordPress sites and sends email notifications when incidents occur.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Continuous monitoring of multiple WordPress sites
+- Dashboard with UP/DOWN status indicators
+- Email notifications for downtime incidents
+- Configurable check intervals per site
+- 24-hour uptime/downtime history visualization
+- UI with DaisyUI components
+- Real-time updates with Laravel Livewire (coming soon)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Backend:** Laravel 12
+- **Frontend:** Blade Templates, Livewire (planned), DaisyUI + Tailwind CSS
+- **Database:** MySQL/PostgreSQL/SQLite
+- **Queue:** Database/Redis for background jobs
+- **Scheduler:** Laravel Task Scheduler for automated checks
 
-## Learning Laravel
+## Requirements
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- PHP 8.2 or higher[laravel](https://laravel.com/docs/12.x/migrations)
+- Composer
+- Node.js & NPM
+- MySQL 8.0+ / PostgreSQL 12+ / SQLite 3.8+
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Installation (Development)
 
-## Laravel Sponsors
+## 1. Clone and Install Dependencies
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```
+bash# Install PHP dependencies
+composer install
 
-### Premium Partners
+# Install JavaScript dependencies
+npm install
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 2. Environment Configuration
 
-## Contributing
+```
+bash# Copy environment file
+cp .env.example .env
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Generate application key
+php artisan key:generate
+```
 
-## Code of Conduct
+## 3. Configure Database
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Edit `.env` file with your database credentials:[laravel](https://laravel.com/docs/12.x/migrations)
 
-## Security Vulnerabilities
+```
+textDB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=website_monitor
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 4. Run Migrations and Seeders
 
-## License
+```
+bash# Create database tables
+php artisan migrate
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Seed with sample data (optional)
+php artisan db:seed
+```
+
+## 5. Compile Assets
+
+```
+bash# Development (watch for changes)
+npm run dev
+
+# Production build
+npm run build
+```
+
+## 6. Start Development Server
+
+```
+bash# Start Laravel development server
+php artisan serve
+
+# Application will be available at http://localhost:8000
+```
+
+## 7. Run Queue Worker (Required for monitoring)
+
+```
+bash# Start queue worker for background jobs
+php artisan queue:work
+
+# Or use queue:listen for auto-reloading during development
+php artisan queue:listen
+```
+
+## 8. Run Scheduler (Required for automated checks)
+
+For development, run the scheduler manually:[laravel](https://laravel.com/docs/12.x/migrations)
+
+```
+bash
+php artisan schedule:work
+```
+
+## Production Deployment
+
+## 1. Configure Queue Worker
+
+Set up Supervisor to keep queue workers running:[laravel](https://laravel.com/docs/12.x/migrations)
+
+```
+text[program:website-monitor-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /path/to/your/project/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=2
+redirect_stderr=true
+stdout_logfile=/path/to/your/project/storage/logs/worker.log
+stopwaitsecs=3600
+```
+
+## 2. Configure Cron Job
+
+Add to your crontab for Laravel Scheduler:[laravel](https://laravel.com/docs/12.x/migrations)
+
+```
+bash
+* * * * * cd /path/to/your/project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+## 3. Set Permissions
+
+```
+bash# Set proper storage permissions
+chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+```
+
+## Development
+
+```
+bash# Start all services (requires Laravel Herd or similar)
+composer dev
+
+# Clear all caches
+php artisan optimize:clear
+
+# Reset database
+php artisan migrate:fresh --seed
+
+# Run tests
+php artisan test
+```
+
+## Asset Management
+
+```
+bash# Watch for frontend changes
+npm run dev
+
+# Build for production
+npm run build
+
+# Format code
+npm run format
+```
+
+## Queue & Scheduler
+
+```
+bash# Start queue worker
+php artisan queue:work
+
+# Run scheduler once (testing)
+php artisan schedule:run
+
+# Start scheduler daemon (development)
+php artisan schedule:work
+```
+
+## Database
+
+```
+bash# Run migrations
+php artisan migrate
+
+# Rollback last migration
+php artisan migrate:rollback
+
+# Fresh migration with seeds
+php artisan migrate:fresh --seed
+
+# Check migration status
+php artisan migrate:status
+```
+
+## Project Structure
+
+```
+textapp/
+├── Http/Controllers/     # Request handlers
+├── Models/              # Eloquent models
+├── Http/Requests/       # Form validation
+└── Console/Commands/    # Custom artisan commands
+
+resources/
+├── views/
+│   ├── layouts/        # Blade layouts
+│   └── admin/sites/    # Site management views
+├── css/                # Stylesheets
+└── js/                 # JavaScript
+
+database/
+├── migrations/         # Database schema
+├── factories/          # Model factories
+└── seeders/           # Database seeders
+
+routes/
+├── web.php            # Web routes
+└── api.php            # API routes
+```
+
+## Configuration
+
+## Email Notifications
+
+Configure mail settings in `.env`:[laravel](https://laravel.com/docs/12.x/notifications)
+
+```
+textMAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=your_username
+MAIL_PASSWORD=your_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=monitor@example.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+## Troubleshooting
+
+## Assets not loading
+
+```
+bashnpm run build
+php artisan optimize:clear
+```
+
+## Queue jobs not processing
+
+```
+bash# Check queue worker is running
+php artisan queue:work
+
+# Check failed jobs
+php artisan queue:failed
+```
+
+## Scheduler not running
+
+```
+bash# Verify cron is configured
+crontab -l
+
+# Test scheduler manually
+php artisan schedule:run
+```
+
+------
+
+**Status:** Active Development - Learning Project
